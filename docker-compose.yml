@@ -1,18 +1,35 @@
 version: '2'
 
-services:
-  postgres:
-    image: postgres:9.5.5
+services: 
+  teamcity-server:
+    image: 'jetbrains/teamcity-server'
+    volumes: 
+      - '/opt/docker/teamcity/data:/data/teamcity_server/datadir'
+      - '/opt/docker/teamcity/log:/data/teamcity/logs'
     ports:
-      - '5432:5432'
+      - 8111:8111
+    environment: 
+      - TEAMCITY_SERVER_MEM_OPTS="-Xmx750m"
+    depends_on:
+      - postgres
+
+  teamcity-agent:
+    image: 'jetbrains/teamcity-agent'
+    environment:
+      - SERVER_URL=teamcity-server:8111
+
+  postgres:
+    image: 'postgres:9.5.5'
+    volumes:
+      - /opt/docker/postgresql/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=p@ssw0rd!
       - POSTGRES_DB=openposdb
-    volumes:
-      - /opt/docker/postgresql/data:/var/lib/postgresql/data
-
+      
   redis:
-    image: redis:latest
+    image: 'redis:latest'
     ports:
-      - "6379:6379"
+      - 6379:6379
