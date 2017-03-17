@@ -27,7 +27,7 @@ services:
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=p@ssw0rd!
-      - POSTGRES_DB=openposdb
+      - POSTGRES_DB=teampmdb
       
   redis:
     image: 'redis:latest'
